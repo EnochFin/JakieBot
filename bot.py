@@ -1,21 +1,26 @@
 import os
+import logging
+import traceback
+import sys
+
 import discord
-import json
 
 import json_manager
-import util
 
 from dotenv import load_dotenv
 
-from todo import ToDo, Status, ToDoManager
-from commands import Command
+from todo import ToDoManager
+from commands.manager_commands import MANAGER_COMMANDS
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+CHANNEL = os.getenv('DISCORD_CHANNEL')
 client = discord.Client()
 
 manager = ToDoManager()
 GENERAL_CHANNEL = {}
+
+logging.basicConfig(filename=os.getenv('LOGGING_FILE'), encoding='utf-8', level=logging.DEBUG)
 
 async def send(msg):
     await GENERAL_CHANNEL.send(msg)
@@ -24,8 +29,7 @@ async def send(msg):
 async def on_ready():
     global GENERAL_CHANNEL
     global data
-    print(f'{client.user} has connected to Discord!')
-    GENERAL_CHANNEL = client.get_channel(838901558116352022)
+    GENERAL_CHANNEL = client.get_channel(int(CHANNEL))
     data = json_manager.read_json()
     await send('I have connected!')
 
@@ -39,20 +43,10 @@ async def on_message(message):
     commands = message.content[1:].split(' ')
     command = commands[0]
 
-    if command == 'add':
-        task_name = ' '.join(commands[1:])
-        manager.items.append(ToDo(task_name))
-        await send(f'added: {task_name}')
-    elif command == 'list':
-        result = '```\n'
-        for item in manager.items:
-            line = f'{item.status}| {item.title}\n'
-            result += line
-        await send(result + '```')
-    elif command == 'save':
-        json_manager.save_json(util.manager_to_json(manager))
-        await send('saved the list!')
-    else:
+    try:
+        await send(MANAGER_COMMANDS[command](manager, commands))
+    except:
+        logging.error(' '.join(traceback.format_exception(*sys.exc_info())))
         await send(f'command not recognized: {command}')
 
 client.run(TOKEN)
