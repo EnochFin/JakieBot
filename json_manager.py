@@ -8,5 +8,5 @@ def save_json(json_data):
 
 def read_json():
     f = open(FILE_NAME)
-    data = json.load(f)
+    data = json.loads(json.load(f))
     return data

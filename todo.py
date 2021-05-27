@@ -16,3 +16,9 @@ class ToDoManager():
     def __init__(self):
         self.items = []
         self.name = 'list'
+    
+    def copy(self):
+        result = ToDoManager()
+        result.items = self.items.copy()
+        result.name = f'{self.name}'
+        return result

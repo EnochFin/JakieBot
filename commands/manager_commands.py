@@ -1,3 +1,4 @@
+import json
 from todo import ToDo, ToDoManager
 
 import json_manager
@@ -19,8 +20,16 @@ def save(manager: ToDoManager, commands):
     json_manager.save_json(util.manager_to_json(manager))
     return 'saved the list!'
 
+def read(manager: ToDoManager, commands):
+    json_obj = json_manager.read_json()
+
+    util.json_to_manager(manager, json_obj)
+
+    return list(manager, commands)
+
 MANAGER_COMMANDS = {
     'add': add,
     'list': list,
     'save': save,
+    'read': read,
 }
