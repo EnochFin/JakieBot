@@ -1,6 +1,6 @@
 import json
 
-FILE_NAME = 'save.json'
+FILE_NAME = 'save.save'
 
 def save_json(json_data):
     with open(FILE_NAME, 'w') as f:

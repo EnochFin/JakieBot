@@ -40,7 +40,7 @@ async def on_message(message):
     if message.author == client.user or message.content[0] != '~':
         return
     
-    commands = message.content[1:].split(' ')
+    commands = list(message.content[1:].split(' '))
     command = commands[0]
 
     try:
