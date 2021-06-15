@@ -21,6 +21,7 @@ manager = ToDoManager()
 GENERAL_CHANNEL = {}
 
 logging.basicConfig(filename=os.getenv('LOGGING_FILE'), encoding='utf-8', level=logging.DEBUG)
+json_manager.FILE_NAME = os.getenv('SAVE_FILE')
 
 async def send(msg):
     await GENERAL_CHANNEL.send(msg)
@@ -30,7 +31,10 @@ async def on_ready():
     global GENERAL_CHANNEL
     global data
     GENERAL_CHANNEL = client.get_channel(int(CHANNEL))
-    data = json_manager.read_json()
+    try:
+        data = json_manager.read_json()
+    except FileNotFoundError:
+        logging.info(f'couldn\'t read file: {json_manager.FILE_NAME}')
     await send('I have connected!')
 
 @client.event

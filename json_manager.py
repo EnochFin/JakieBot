@@ -1,13 +1,13 @@
 import json
-import os
+import logging
 
-FILE_NAME = os.getenv("SAVE_FILE")
+FILE_NAME = ''
 
 def save_json(json_data):
-    with open(FILE_NAME, 'w') as f:
+    with open(FILE_NAME, 'w+') as f:
         json.dump(json_data, f)
 
 def read_json():
-    f = open(FILE_NAME)
+    f = open(FILE_NAME, 'r+')
     data = json.loads(json.load(f))
     return data
