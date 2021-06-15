@@ -1,6 +1,7 @@
 import json
+import os
 
-FILE_NAME = 'save.save'
+FILE_NAME = os.getenv("SAVE_FILE")
 
 def save_json(json_data):
     with open(FILE_NAME, 'w') as f:
