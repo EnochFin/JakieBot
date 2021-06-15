@@ -49,6 +49,8 @@ async def on_message(message):
 
     try:
         await send(MANAGER_COMMANDS[command](manager, commands))
+    except FileNotFoundError:                                           # TODO: throw more specific error from the actual json_manager 
+        await send(f'no file with name: {json_manager.FILE_NAME} found')
     except:
         logging.error(' '.join(traceback.format_exception(*sys.exc_info())))
         await send(f'command not recognized: {command}')
